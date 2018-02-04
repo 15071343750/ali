@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Sign in &laquo; Admin</title>
+    <link rel="stylesheet" href="../assets/vendors/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <style>
+        #reminderGtoup {
+            display: none;
+        }
+        #reminderGtoup > div {
+            border: none;
+            -webkit-user-select: none;
+        }
+    </style>
+</head>
+<body>
+<div class="login">
+    <form class="login-wrap" method="post" action="login_check.php">
+        <img class="avatar" src="../assets/img/default.png">
+        <div class="form-group">
+            <label for="email" class="sr-only">邮箱</label>
+            <input id="email" type="email" name="email" class="form-control" placeholder="邮箱" autofocus>
+        </div>
+        <div class="form-group">
+            <label for="password" class="sr-only">密码</label>
+            <input id="password" type="password" name="password" class="form-control" placeholder="密码">
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-4" style="padding-right: 10px;">
+                    <!--验证码图片-->
+                    <img src="common/verify.php" id="verify">
+                </div>
+                <div class="col-sm-8" style="padding-left: 10px;">
+                    <label for="code" class="sr-only">验证码</label>
+                    <input id="code" name="code" type="text" class="form-control" placeholder="验证码">
+                </div>
+            </div>
+        </div>
+        <div class="form-group" id="reminderGtoup">
+            <div class="form-control text-center" id="reminder"></div>
+            <!--<input type="text" id="reminder" class="form-control text-center" placeholder="提示框" disabled>-->
+        </div>
+        <input type="submit" value="登 录" class="btn btn-primary btn-block">
+    </form>
+</div>
+<script src="/assets/jquery-1.12.2.min.js"></script>
+<!--<script src="/assets/vendors/jquery/jquery.js"></script>-->
+<script>
+    $("#verify").click(function () {
+        $(this).get(0).src = "common/verify.php?_=" + Math.random();
+    });
+    $("#code").keyup(function () {
+        $.ajax({
+            url: 'login_ajax.php',
+            type: 'post',
+            data: {code: $("#code").val()},
+            dataType: 'text',
+            success: function (res) {
+                if (res == 0) {
+                    $("#reminderGtoup").slideDown();
+                    $("#reminder").css({'color': '#fff', 'background': '#D9534F'}).html('验 证 码 错 误');
+                } else {
+                    $("#reminderGtoup").slideDown();
+                    $("#reminder").css({'color': '#fff', 'background': '#5CB85C'}).html('验 证 码 正 确');
+                    $("#reminderGtoup").delay(300).slideUp();
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
